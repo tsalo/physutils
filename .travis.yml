@@ -56,7 +56,7 @@ install:
 
 script:
   - if [ "${CHECK_TYPE}" == "linting" ]; then
-      flake8 phys2bids;
+      flake8 physutils;
     elif [ "${CHECK_TYPE}" == "docdoctest" ]; then
       cd docs;
       pip install -r ./requirements.txt;
@@ -65,8 +65,8 @@ script:
     elif [ "${CHECK_TYPE}" == "test" ]; then
       mkdir for_testing && cd for_testing;
       cp ../setup.cfg ./;
-      args="--doctest-modules --cov-report term-missing --cov=phys2bids --pyargs"
-      python -m pytest ${args} phys2bids;
+      args="--doctest-modules --cov-report term-missing --cov=physutils --pyargs"
+      python -m pytest ${args} physutils;
     else
       false;
     fi
