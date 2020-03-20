@@ -1,0 +1,108 @@
+os: linux
+dist: bionic
+services:
+  - xvfb
+notifications:
+  email: change
+
+language: python
+
+python:
+  - 3.6
+  - 3.7
+
+env:
+  jobs:
+    - CHECK_TYPE=linting
+    - CHECK_TYPE=docdoctest
+    - CHECK_TYPE=test
+  global:
+    - INSTALL_TYPE=setup
+
+jobs:
+  include:
+    - python: 3.6
+      env:
+        - INSTALL_TYPE=sdist
+        - CHECK_TYPE=test
+    - python: 3.6
+      env:
+        - INSTALL_TYPE=wheel
+        - CHECK_TYPE=test
+    - language: node_js
+      node_js: 10
+      env:
+        - INSTALL_TYPE=auto-svl
+        - CHECK_TYPE=auto-svl
+        - GIT_NAME="Stefano Moia"
+        - GIT_EMAIL="s.moia@bcbl.eu"
+        - GH_USER="smoia"
+
+before_install:
+  - if [ "${CHECK_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+      if [ "${CHECK_BRANCH}" == "* master" ]; then
+        git config --local user.name "${GIT_NAME}";
+        git config --local user.email "${GIT_EMAIL}";
+      else
+        echo "Not on master branch, skipping auto-svl";
+      fi;
+    else
+      python -m pip install --upgrade pip;
+    fi
+  - if [ "${CHECK_TYPE}" == "linting" ]; then
+      pip install flake8;
+    elif [ "${CHECK_TYPE}" == "test" ]; then
+      pip install "pytest>=3.6" pytest-cov coverage coveralls codecov wget;
+    elif [ "${CHECK_TYPE}" == "docdoctest" ]; then
+      pip install "sphinx>2.0" sphinx_rtd_theme pandas sphinx-argparse;
+    fi
+
+install:
+    if [ "${INSTALL_TYPE}" == "setup" ]; then
+      python setup.py install;
+    elif [ "${INSTALL_TYPE}" == "sdist" ]; then
+      python setup.py sdist;
+      pip install dist/*.tar.gz;
+    elif [ "${INSTALL_TYPE}" == "wheel" ]; then
+      python setup.py bdist_wheel;
+      pip install dist/*.whl;
+    elif [ "${INSTALL_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+        if [ "${CHECK_BRANCH}" == "* master" ]; then
+          curl -vkL -o - https://github.com/intuit/auto/releases/download/v9.20.1/auto-linux.gz | gunzip > build/auto;
+        else
+          echo "Not on master branch, skipping auto-svl";
+      fi;
+    else
+      false;
+    fi
+
+script:
+  - if [ "${CHECK_TYPE}" == "linting" ]; then
+      flake8 phys2bids;
+    elif [ "${CHECK_TYPE}" == "docdoctest" ]; then
+      cd docs;
+      pip install -r ./requirements.txt;
+      make html;
+      make doctest;
+    elif [ "${CHECK_TYPE}" == "test" ]; then
+      mkdir for_testing && cd for_testing;
+      cp ../setup.cfg ./;
+      args="--doctest-modules --cov-report term-missing --cov=phys2bids --pyargs"
+      python -m pytest ${args} phys2bids;
+    elif [ "${CHECK_TYPE}" == "auto-svl" ]; then
+      CHECK_BRANCH=$( git branch | grep \*);
+        if [ "${CHECK_BRANCH}" == "* master" ]; then
+          build/auto shipit;
+        else
+          echo "Not on master branch, skipping auto-svl";
+      fi;
+    else
+      false;
+    fi
+
+after_success:
+  - if [ "${CHECK_TYPE}" == "test" ]; then
+      coveralls; codecov;
+    fi
