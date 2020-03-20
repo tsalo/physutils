@@ -23,10 +23,10 @@ parsers:
 
 ignore:
   - "docs"
-  - "physiotools/_version.py"
+  - "physutils/_version.py"
   - "**/__init__.py"
   - "**/**/__init__.py"
-  - "physiotools/tests"
+  - "physutils/tests"
 
 comment:
   layout: "reach,diff,flags,tree"

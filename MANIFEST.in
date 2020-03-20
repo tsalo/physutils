@@ -1,4 +1,4 @@
 include README.* LICENSE setup* MANIFEST.in requirements.txt
 
 include versioneer.py
-include physiotools/_version.py
+include physutils/_version.py

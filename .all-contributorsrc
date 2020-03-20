@@ -12,8 +12,6 @@
       "profile": "https://github.com/vinferrer",
       "contributions": [
         "bug",
-        "code",
-        "doc",
         "review"
       ]
     },
@@ -23,12 +21,10 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/14265705?v=4",
       "profile": "http://rossmarkello.com",
       "contributions": [
-        "bug",
         "code",
         "ideas",
         "infra",
         "review",
-        "test"
       ]
     },
     {
@@ -42,9 +38,6 @@
         "ideas",
         "infra",
         "projectManagement",
-        "review",
-        "doc",
-        "content"
       ]
     },
     {
@@ -53,9 +46,7 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/13706448?v=4",
       "profile": "https://github.com/eurunuela",
       "contributions": [
-        "bug",
         "code",
-        "infra",
         "review",
         "test"
       ]

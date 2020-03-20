@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-I/O objects for phys2bids.
+I/O objects for the physiopy suite.
 """
 
 import logging
