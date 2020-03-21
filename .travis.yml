@@ -55,7 +55,8 @@ install:
     fi
 
 script:
-  - if [ "${CHECK_TYPE}" == "linting" ]; then
+  - |
+    if [ "${CHECK_TYPE}" == "linting" ]; then
       flake8 physutils;
     elif [ "${CHECK_TYPE}" == "docdoctest" ]; then
       cd docs;

@@ -1,4 +1,4 @@
-physiotoold/_version.py export-subst
+physutils/_version.py export-subst
 
 *.py eol=lf
 *.rst eol=lf
